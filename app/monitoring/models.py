@@ -1,14 +1,14 @@
 from datetime import datetime, timezone
 
+from common.models import AuditableModel
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from common.models import AuditableModel
-
 from .enums import TIER_AMOUNT
 from .managers import CustomUserManager
+
 
 class User(AbstractBaseUser, AuditableModel):
     TIER_CHOICES = [
@@ -37,3 +37,51 @@ class User(AbstractBaseUser, AuditableModel):
     def save_last_login(self) -> None:
         self.last_login = datetime.now(timezone.utc)
         self.save()
+
+    @property
+    def is_new(self) -> bool:
+        """A user is new when created within 20mins ago"""
+        allowable_in_seconds = float(20 * 60)
+        now = datetime.now(timezone.utc)
+        created_at = (now - self.created_at).total_seconds()
+        if created_at >= allowable_in_seconds:
+            return False
+        return True
+
+    def is_amount_above_tier_limit(self, amount: float) -> bool:
+        """Checks if a transaction amount is within user's tier amount"""
+        tier_max_amount = TIER_AMOUNT.get(self.tier)
+        if amount > tier_max_amount:
+            return True
+        return False
+
+    @property
+    def is_within_timing_window(self):
+        """Checks if the transaction is within a 1-minute timing window.
+        This is based on the timing of the last transaction (sent funds) by the user.
+        """
+        allowable_window_in_seconds = float(1 * 60)
+        if last_transaction := self.sent_funds.order_by("created_at").last():
+            now = datetime.now(timezone.utc)
+            time_diff = (now - last_transaction.created_at).total_seconds()
+            if time_diff < allowable_window_in_seconds:
+                return True
+            return False
+
+        return False
+
+
+class Transaction(AuditableModel):
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="sent_funds"
+    )
+    receiver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="received_funds",
+    )
+    amount = models.DecimalField(max_digits=20, decimal_places=2, default=0.00)
+    is_flagged = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ("-created_at",)
