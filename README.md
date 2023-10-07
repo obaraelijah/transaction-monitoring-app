@@ -19,9 +19,9 @@ This system evaluate policies and  send notifications via email when certain con
 Create a .env file by copying the .env.sample provided and run:
 
 ```
-docker-compose -f docker-compose.dev.yml up --build
+docker-compose -f docker-compose.yml up --build
 ```
-to build and run the container using the dev yaml file.
+to build and run the container using the  yaml file.
 
 Access docs:
 ```sh
