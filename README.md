@@ -78,10 +78,6 @@ or Run test in the app dir for activated an virtualenv using:
 ```
 pytest -rP -vv
 ```
-
-# Test Output
-![Screenshot](screenshot3.png)
-
 # Workflow of this
 - Create account on the system
 - Login with valid credentials to retrieve auth token
