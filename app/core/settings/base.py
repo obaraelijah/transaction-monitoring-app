@@ -15,9 +15,7 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", cast=bool)
 
-
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com', 'localhost']
 
 
 # Application definition
@@ -29,13 +27,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     #THird-party apps
     "corsheaders",
     "drf_spectacular",
     "core.celery.CeleryConfig",
+
     # Local Apps
     "monitoring",
 ]
+
+# USER MODEL
+AUTH_USER_MODEL = "monitoring.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

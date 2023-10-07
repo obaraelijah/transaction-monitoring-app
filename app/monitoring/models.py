@@ -24,6 +24,7 @@ class User(AbstractBaseUser, AuditableModel):
     is_admin = models.BooleanField(default=False)
     tier = models.CharField(max_length=20, choices=TIER_CHOICES, default="T1")
     last_login = models.DateTimeField(null=True, blank=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
