@@ -80,7 +80,7 @@ pytest -rP -vv
 ```
 
 # Test Output
-![Screenshot](screenshot3 .png)
+![Screenshot](screenshot3.png)
 
 # Workflow of this
 - Create account on the system
