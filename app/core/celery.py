@@ -4,7 +4,6 @@ import os
 from celery import Celery
 from decouple import config
 
-#checks if django is configured
 if not settings.configured:
     environment = config('ENVIRONMENT')
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', "core.settings."+environment) 
