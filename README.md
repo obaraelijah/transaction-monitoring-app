@@ -7,7 +7,7 @@
 This system evaluate policies and  send notifications via email when certain conditions are met
 
 # Tools & Services:
-- Django & DRF : for building the APIs
+- Django & DRF : For building the APIs
 - Docker & Docker compose: Containerization
 - Celery: For running background task asynchronously(e.g. sending email)
 - Rabbit MQ: A message broker for celery
@@ -32,7 +32,6 @@ http://localhost:8000/api/v1/doc
 ![Screenshot](screenshot2.png)
 <br><br><br>
 
-
 # Running In a Virtual Env
 
 Create a virtual environment using:
@@ -43,7 +42,6 @@ python3 -m venv env
 ```
 pip install -r app/requirements/dev.txt
 ```
-
 Navigate to app directory and run migrations using:
 
 ```
@@ -62,7 +60,6 @@ Start celery worker process in an activated virtualenv at the 'app' directory by
 ```
 celery -A core worker --loglevel=info
 ```
-
 Remember to update RABBITMQ_URL in .env:
 Get a free instance at https://cloudamqp.com/
 
